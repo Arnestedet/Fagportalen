@@ -1,12 +1,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
-  const supabase = supabase.createClient('https://wykturbnheskysgjiihj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5a3R1cmJuaGVza3lzZ2ppaWhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NzM4MzMsImV4cCI6MjA2NzM0OTgzM30.fuT1C20Qppw09pBVkpXWu2jqYZWBwBAm-5VfkPoygdo');
+  const supa = supabase.createClient('https://wykturbnheskysgjiihj.supabase.co', 'DIN-ANON-KEY');
 
   async function hentPersoner() {
     const container = document.getElementById('personliste');
     container.innerText = "Laster personer...";
 
-    const { data, error } = await supabase.from('personer').select('*');
+    const { data, error } = await supa.from('personer').select('*');
 
     if (error) {
       container.innerText = "Feil ved lasting av data";
@@ -19,7 +19,7 @@
       return;
     }
 
-    container.innerHTML = ""; // Tømmer "Laster..." teksten
+    container.innerHTML = "";
 
     data.forEach(person => {
       container.innerHTML += `
