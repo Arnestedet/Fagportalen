@@ -1,36 +1,41 @@
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script>
-  const supa = supabase.createClient('https://wykturbnheskysgjiihj.supabase.co', 'DIN-ANON-KEY');
+<body>
+  <h1>Personer i Fagportalen</h1>
+  <div id="personliste"></div>
 
-  async function hentPersoner() {
-    const container = document.getElementById('personliste');
-    container.innerText = "Laster personer...";
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supa = supabase.createClient('https://wykturbnheskysgjiihj.supabase.co', 'DIN-ANON-KEY');
 
-    const { data, error } = await supa.from('personer').select('*');
+    async function hentPersoner() {
+      const container = document.getElementById('personliste');
+      container.innerText = "Laster personer...";
 
-    if (error) {
-      container.innerText = "Feil ved lasting av data";
-      console.error(error);
-      return;
+      const { data, error } = await supa.from('personer').select('*');
+
+      if (error) {
+        container.innerText = "Feil ved lasting av data";
+        console.error(error);
+        return;
+      }
+
+      if (data.length === 0) {
+        container.innerText = "Ingen personer funnet.";
+        return;
+      }
+
+      container.innerHTML = "";
+
+      data.forEach(person => {
+        container.innerHTML += `
+          <div style="margin-bottom:20px; border:1px solid #ccc; padding:10px;">
+            <h2>${person.navn} (${person.fodselsar ?? 'ukjent'}–${person.dodsar ?? 'ukjent'})</h2>
+            ${person.bilde_url ? `<img src="${person.bilde_url}" width="150" style="max-width:100%;" />` : ''}
+            <p>${person.biografi ?? ''}</p>
+          </div>
+        `;
+      });
     }
 
-    if (data.length === 0) {
-      container.innerText = "Ingen personer funnet.";
-      return;
-    }
-
-    container.innerHTML = "";
-
-    data.forEach(person => {
-      container.innerHTML += `
-        <div style="margin-bottom:20px; border:1px solid #ccc; padding:10px;">
-          <h2>${person.navn} (${person.fodselsar ?? 'ukjent'}–${person.dodsar ?? 'ukjent'})</h2>
-          ${person.bilde_url ? `<img src="${person.bilde_url}" width="150" style="max-width:100%;" />` : ''}
-          <p>${person.biografi ?? ''}</p>
-        </div>
-      `;
-    });
-  }
-
-  hentPersoner();
-</script>
+    hentPersoner();
+  </script>
+</body>
