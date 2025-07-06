@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Fagportalen – Personoversikt</title>
+</head>
+<body>
+  <h1>Personer i Fagportalen</h1>
+  <div id="personliste"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabase = supabase.createClient('https://wykturbnheskysgjiihj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5a3hrd3l3cmp4Z2Vldnl2bXJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNDkwNjQsImV4cCI6MjA2NTgyNTA2NH0.7BsbatTmKgK3Blf4LgHyhMj1vlF_EIIpoZCPT7fi7tk');
+
+    async function hentPersoner() {
+      const { data, error } = await supabase.from('personer').select('*');
+      const container = document.getElementById('personliste');
+
+      if (error) {
+        container.innerText = "Feil ved lasting av data";
+        console.error(error);
+        return;
+      }
+
+      data.forEach(person => {
+        container.innerHTML += `
+          <div style="margin-bottom:20px; border:1px solid #ccc; padding:10px;">
+            <h2>${person.navn} (${person.fodselsar ?? 'ukjent'}–${person.dodsar ?? 'ukjent'})</h2>
+            <img src="${person.bilde_url}" width="150" style="max-width:100%;" />
+            <p>${person.biografi}</p>
+          </div>
+        `;
+      });
+    }
+
+    hentPersoner();
+  </script>
+</body>
+</html>
